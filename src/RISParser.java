@@ -97,10 +97,10 @@ public class RISParser {
 			case "JO": entry.setJournal(content[1]); break;
 			case "PB": entry.setPublisher(content[1]); break;
 			case "BT": entry.setConference(content[1]); break;
-			case "PY": 
+			case "PY":
 				// Sometimes, the year is followed by other symbols, which we ignore
 				String year = content[1];
-				if (content[1].length() >= 4) year = content[1].substring(0,4);
+				if (content[1].length() > 4) year = content[1].substring(0,4);
 				entry.setPubYear(Integer.parseInt(year)); 
 				break;
 			case "SP": entry.setSP(content[1]); break;
