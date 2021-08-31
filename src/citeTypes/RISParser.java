@@ -60,6 +60,14 @@ public class RISParser {
 	}
 	
 	/*
+	 * Given a string encoding a ris entry, this method parses the content and transforms it into a RIS
+	 */
+	public static RIS parseFromString(String content) {
+		
+		return null;
+	}
+	
+	/*
 	 * Detects whether the current line is the first line that has actual content - starts with TY
 	 */
 	private static boolean detectFirstLine(String line) {
