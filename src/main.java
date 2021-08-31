@@ -1,11 +1,23 @@
-import java.util.ArrayList;
+import citeTypes.Bibtex;
+import citeTypes.RIS;
+import citeTypes.RISParser;
+import formatException.WrongFormatException;
+import gui.MainFrame;
 
+/*
+ * Main class of RisTex
+ */
 public class main {
-
+	
+	/*
+	 * Main method of RisTex
+	 */
 	public static void main(String[] args) {
 		
-		// TODO: GUI where you can copy an entry into
 		
+		MainFrame mainfr = new MainFrame();
+		
+		/*
 		if (args.length == 0) {
 			System.out.println("No filename given.");
 			return;
@@ -21,16 +33,16 @@ public class main {
 				Bibtex bibentry = new Bibtex(entry);
 				
 				// Output file
-				filename = removeRIS(filename);
+				filename = fileNameChecker(filename);
 				bibentry.writeToFile(filename + "_out");
 				
 			} catch (WrongFormatException e) {
 				System.out.println(e);
 			}
-		}
+		} */
 	}
 	
-	private static String removeRIS(String filename) throws WrongFormatException {
+	private static String fileNameChecker(String filename) throws WrongFormatException {
 		// Check if filename ends with .ris
 		// If not: throw WrongFormatException
 		int n = filename.length();
