@@ -249,4 +249,70 @@ public class Bibtex {
 			System.out.println(e);
 		}
 	}
+	
+	/*
+	 * Write the Bibtex into a single string
+	 */
+	public String writeToString() {
+		
+		String result = "";
+	
+	    // Add type and ID to result String
+	    String typeString = "";
+	    switch(type) {
+	    	case article: typeString = "@article"; break;
+	    	case book: typeString = "@book"; break;
+	    	case inbook: typeString = "@inbook"; break;
+	    	case inproceedings: typeString = "@inproceedings"; break;
+	    	case phdthesis: typeString = "@phdthesis"; break;
+	    	case techreport: typeString = "@techreport"; break;
+	    }
+	    
+	    // Add the ID to the string
+	    if (ID == null) generateID();
+	    typeString += "{" + ID + ",";
+	    result = typeString + "\n";
+	    
+	    // Add authors
+	    String indent = "    ";
+	    result += indent + "author = {";
+	    Iterator<String> authit = authors.iterator();
+	    boolean more_than_one_auth = false;
+	    while (authit.hasNext()) {
+	    	if (more_than_one_auth) {
+	    		result += " and " + authit.next();
+	    	} else {
+	    		result += authit.next();
+	    		more_than_one_auth = true;
+	    	}
+	    }
+	    result += "},\n";
+	    
+	    // Print title
+	    result += indent + "title = {" + title + "},\n";
+	    
+	    // Print year
+	    result += indent + "year = {" + year + "}";
+	    
+	    // Now the optional entries are left
+	    // Print booktitle/journal/institution
+	    switch (type) {
+	    	case inproceedings: result += ",\n" + indent + "booktitle = {" + booktitle + "}"; break;
+	    	case inbook: result += ",\n" + indent + "booktitle = {" + booktitle + "}"; break;
+	    	case article: result += ",\n" + indent + "journal = {" + journal + "}"; break;
+	    	case phdthesis: result += ",\n" + indent + "school = {" + school + "}"; break;
+	    	case techreport: result += ",\n" + indent + "school = {" + school + "}"; break;
+	    }
+	    
+	    // Remaining entries - all optional
+	    if (volume != null) result += ",\n" + indent + "volume = {" + volume + "}";
+	    if (number != 0) result += ",\n" + indent + "number = {" + number + "}";
+	    if (pages != null) result += ",\n" + indent + "pages = {" + pages + "}";
+	    if (series != null) result += ",\n" + indent + "series = {" + series + "}";
+	    if (publisher != null) result += ",\n" + indent + "publisher = {" + publisher + "}";
+	    
+	    // End of entry
+	    result += "\n}";
+	    return result;
+	}
 }

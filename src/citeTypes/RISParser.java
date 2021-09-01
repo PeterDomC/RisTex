@@ -62,9 +62,57 @@ public class RISParser {
 	/*
 	 * Given a string encoding a ris entry, this method parses the content and transforms it into a RIS
 	 */
-	public static RIS parseFromString(String content) {
+	public static RIS parseFromString(String content) throws WrongFormatException {
 		
-		return null;
+		if (content == null) {
+			throw new WrongFormatException("Wrong format!");
+		}
+		
+		RIS entry = null;
+		String[] contentSplit = content.split("\n");
+		int n = contentSplit.length;
+
+		// Flags for found first and last line
+		// Everything before the first line starting with "TY  - " is ignored
+		// Everything below the first line with "ER  - " is ignored
+		boolean found_first = false;
+		boolean found_end = false;
+		
+		// Parse entry line by line
+		for (int i = 0; i < n; i++) {
+			
+			// A RIS entry always starts with "TY  - "
+			// There can be comments above this line - these are ignored.
+			if (found_first) {
+				
+				// First line already found - parse non-first line with actual content
+				if (detectLastLine(contentSplit[i]) ) {
+					// Current line is the last line - leave the loop and ignore the rest of the entry
+					found_end = true;
+					break;
+					
+				} else {
+					// Current line is NOT the last line - parse its content and add to entry
+					entry = parseContent(contentSplit[i],entry);
+				}
+				
+			} else {
+				
+				// First line not found yet
+				if (detectFirstLine(contentSplit[i])) {
+					// First line detected
+					entry = parseFirstLine(contentSplit[i]);
+					found_first = true;
+				}
+			}
+		}
+		
+		if (found_first && found_end) {
+			// Parsing is only successful if first and last line have been found!
+			return entry;
+		} else {
+			throw new WrongFormatException("Wrong format!");
+		}
 	}
 	
 	/*
@@ -85,7 +133,7 @@ public class RISParser {
 	 */
 	private static boolean detectLastLine(String line) {
 		
-		String[] content = line.split("  - ");
+		String[] content = line.split("  -");
 		if (content[0].equals("ER")) {
 			return true;
 		} else {

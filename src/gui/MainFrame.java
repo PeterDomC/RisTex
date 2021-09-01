@@ -6,11 +6,13 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import citeTypes.Bibtex;
 import citeTypes.RIS;
 import citeTypes.RISParser;
+import formatException.WrongFormatException;
 
 /**
  * Simple absolute (evil!) layout for Ristex
@@ -29,7 +31,7 @@ public class MainFrame extends JFrame {
 	 * Constructor, generating the main frame with all required components
 	 */
 	public MainFrame() {
-		this.setTitle("RisTex - A tool for translating RIS into Bibtex");
+		this.setTitle("RisTex - A tool for translating RIS into Bibtex and vice versa");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(900,520);
 		this.setLayout(null);
@@ -44,6 +46,7 @@ public class MainFrame extends JFrame {
 				BorderFactory.createEmptyBorder(5,5,5,5)
 			)
 		);
+		
 		this.risText = risText;
 		this.add(risText);
 		
@@ -56,6 +59,7 @@ public class MainFrame extends JFrame {
 				BorderFactory.createEmptyBorder(5,5,5,5)
 			)
 		);
+		
 		this.bibtexText = bibtexText;
 		this.add(bibtexText);
 		
@@ -93,17 +97,22 @@ public class MainFrame extends JFrame {
 			new ActionListener() {
 
 				@Override
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent acteve) {
 					
 					// Parse risText and store in entry
 					String content = risText.getText();
-					//entry = RISParser.parseFromString(content);
+					try {
+						entry = RISParser.parseFromString(content);
+					} catch (WrongFormatException e) {
+						// Replace by showing an error box
+						e.printStackTrace();
+					}
 					
 					// Translate it to bibtex and store in bibentry
+					bibentry = new Bibtex(entry);
 					
 					// Write bibentry to bibtexText
-					bibtexText.setText("Processing");
-					
+					bibtexText.setText(bibentry.writeToString());
 				}
 			}
 		);
