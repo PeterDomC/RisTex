@@ -1,16 +1,16 @@
-BLABLA und so weiter
+Provider: Schloss Dagstuhl - Leibniz Center for Informatics
+Database: dblp computer science bibliography
+Content:text/plain; charset="utf-8"
 
 TY  - CPAPER
+ID  - DBLP:conf/fsttcs/ChiniS20
 AU  - Chini, Peter
-AU  - Meyer, Roland
 AU  - Saivasan, Prakash
-TI  - Complexity of Liveness in Parameterized Systems
-BT  - FSTTCS
-PB  - Schloss Dagstuhl
-SP  - 37:1
-EP  - 37:15
-PY  - 2019
-ID  - Chini2019
-ER  - 
+TI  - A Framework for Consistency Algorithms.
+BT  - 40th IARCS Annual Conference on Foundations of Software Technology and Theoretical Computer Science, FSTTCS 2020.
+SP  - 42:1
+EP  - 42:17
+PY  - 2020//
+ER  -
 
-Blubbblubb und so weiter
+Comments are also available here (:
