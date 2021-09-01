@@ -1,7 +1,4 @@
 package citeTypes;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
@@ -167,86 +164,15 @@ public class Bibtex {
 	 * It is the last name of the first author, followed by the year
 	 */
 	public void generateID() {
-		Iterator<String> authit = authors.iterator();
-		String name = "";
-		if (authit.hasNext()) {
-			name = authit.next().split(", ")[0];
-		}
 		
-		this.ID = name + year;
-	}
-	
-	/*
-	 * Write the Bibtex entry to a file 
-	 */
-	public void writeToFile(String filename) {
-		
-		try {
-		    FileWriter fileWriter = new FileWriter(filename + ".bib");
-		    PrintWriter writer = new PrintWriter(fileWriter);
-		    
-		    // Print type and ID into file
-		    String typeString = "";
-		    switch(type) {
-		    	case article: typeString = "@article"; break;
-		    	case book: typeString = "@book"; break;
-		    	case inbook: typeString = "@inbook"; break;
-		    	case inproceedings: typeString = "@inproceedings"; break;
-		    	case phdthesis: typeString = "@phdthesis"; break;
-		    	case techreport: typeString = "@techreport"; break;
-		    }
-		    
-		    // Add the ID to the string
-		    if (ID == null) generateID();
-		    typeString += "{" + ID + ",";
-		    writer.println(typeString);
-		    
-		    // Print authors
-		    String indent = "	";
-		    writer.print(indent + "author = {");
-		    Iterator<String> authit = authors.iterator();
-		    boolean more_than_one_auth = false;
-		    while (authit.hasNext()) {
-		    	if (more_than_one_auth) {
-		    		writer.print(" and " + authit.next());
-		    	} else {
-		    		writer.print(authit.next());
-		    		more_than_one_auth = true;
-		    	}
-		    }
-		    writer.println("},");
-		    
-		    // Print title
-		    writer.println(indent + "title = {" + title + "},");
-		    
-		    // Print year
-		    writer.print(indent + "year = {" + year + "}");
-		    
-		    // Now the optional entries are left
-		    // Print booktitle/journal/institution
-		    switch (type) {
-		    	case inproceedings: writer.print(",\n" + indent + "booktitle = {" + booktitle + "}"); break;
-		    	case inbook: writer.print(",\n" + indent + "booktitle = {" + booktitle + "}"); break;
-		    	case article: writer.print(",\n" + indent + "journal = {" + journal + "}"); break;
-		    	case phdthesis: writer.print(",\n" + indent + "school = {" + school + "}"); break;
-		    	case techreport: writer.print(",\n" + indent + "school = {" + school + "}"); break;
-		    }
-		    
-		    // Remaining entries - all optional
-		    if (volume != null) writer.print(",\n" + indent + "volume = {" + volume + "}");
-		    if (number != 0) writer.print(",\n" + indent + "number = {" + number + "}");
-		    if (pages != null) writer.print(",\n" + indent + "pages = {" + pages + "}");
-		    if (series != null) writer.print(",\n" + indent + "series = {" + series + "}");
-		    if (publisher != null) writer.print(",\n" + indent + "publisher = {" + publisher + "}");
-		    
-		    // End of entry
-		    writer.println("\n}");
-		    
-		    writer.close();
-		    fileWriter.close();
+		if (this.ID == null && authors != null) {
+			Iterator<String> authit = authors.iterator();
+			String name = "";
+			if (authit.hasNext()) {
+				name = authit.next().split(", ")[0];
+			}
 			
-		} catch (IOException e) {
-			System.out.println(e);
+			this.ID = name + year;
 		}
 	}
 	
@@ -268,23 +194,25 @@ public class Bibtex {
 	    	case techreport: typeString = "@techreport"; break;
 	    }
 	    
-	    // Add the ID to the string
-	    if (ID == null) generateID();
+	    // Add the ID to the String
+	    generateID();
 	    typeString += "{" + ID + ",";
 	    result = typeString + "\n";
 	    
 	    // Add authors
 	    String indent = "    ";
 	    result += indent + "author = {";
-	    Iterator<String> authit = authors.iterator();
-	    boolean more_than_one_auth = false;
-	    while (authit.hasNext()) {
-	    	if (more_than_one_auth) {
-	    		result += " and " + authit.next();
-	    	} else {
-	    		result += authit.next();
-	    		more_than_one_auth = true;
-	    	}
+	    if (authors != null) {
+		    Iterator<String> authit = authors.iterator();
+		    boolean more_than_one_auth = false;
+		    while (authit.hasNext()) {
+		    	if (more_than_one_auth) {
+		    		result += " and " + authit.next();
+		    	} else {
+		    		result += authit.next();
+		    		more_than_one_auth = true;
+		    	}
+		    }   
 	    }
 	    result += "},\n";
 	    
@@ -302,6 +230,7 @@ public class Bibtex {
 	    	case article: result += ",\n" + indent + "journal = {" + journal + "}"; break;
 	    	case phdthesis: result += ",\n" + indent + "school = {" + school + "}"; break;
 	    	case techreport: result += ",\n" + indent + "school = {" + school + "}"; break;
+	    	default:
 	    }
 	    
 	    // Remaining entries - all optional

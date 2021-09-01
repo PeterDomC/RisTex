@@ -1,7 +1,4 @@
 package citeTypes;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -164,77 +161,15 @@ public class RIS {
 	 * It is the last name of the first author, followed by the year
 	 */
 	public void generateID() {
-		Iterator<String> authit = authors.iterator();
-		String name = "";
-		if (authit.hasNext()) {
-			name = authit.next().split(", ")[0];
-		}
 		
-		this.ID = name + pub_year;
-	}
-	
-	/*
-	 * Write the RIS entry to a file 
-	 */
-	public void writeToFile(String filename) {
+		if (this.ID == null && authors != null) {
+			Iterator<String> authit = authors.iterator();
+			String name = "";
+			if (authit.hasNext()) {
+				name = authit.next().split(", ")[0];
+			}
 		
-		try {
-		    FileWriter fileWriter = new FileWriter(filename + ".ris");
-		    PrintWriter writer = new PrintWriter(fileWriter);
-		    
-		    // Print type into file
-		    String typeString = "";
-		    switch(type) {
-		    	case BOOK: typeString = "BOOK"; break;
-		    	case CHAP: typeString = "CHAP"; break;
-		    	case JOUR: typeString = "JOUR"; break;
-		    	case CPAPER: typeString = "CPAPER"; break;
-		    	case THES: typeString = "THES"; break;
-		    	case RPRT: typeString = "RPRT"; break;
-		    }
-		    
-		    writer.println("TY  - " + typeString);
-		    
-		    // Print authors
-		    Iterator<String> authit = authors.iterator();
-		    while (authit.hasNext()) {
-		    	writer.println("AU  - " + authit.next());
-		    }
-		    
-		    // Print title
-		    writer.println("TI  - " + title);
-		    
-		    // Print journal or conference
-		    switch(type) {
-		    	case JOUR: writer.println("JO  - " + journal); break;
-		    	case CPAPER: writer.println("BT  - " + conference); break;
-		    }
-		    
-		    // Print publisher if set
-		    if (publisher != null) writer.println("PB  - " + publisher);
-		    
-		    // Print pages if set
-		    if (SP != null && EP != null) {
-		    	writer.println("SP  - " + SP);
-		    	writer.println("EP  - " + EP);
-		    }
-		    
-		    // Print year
-		    writer.println("PY  - " + pub_year);
-		    
-		    // Print ID
-		    if (ID == null) generateID();
-		    writer.println("ID  - " + ID);
-		    
-		    // End of entry
-		    writer.print("ER  - ");
-		    
-		    // Close writers
-		    writer.close();
-		    fileWriter.close();
-			
-		} catch (IOException e) {
-			System.out.println(e);
+			this.ID = name + pub_year;
 		}
 	}
 }

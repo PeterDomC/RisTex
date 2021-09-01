@@ -6,8 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 
 import citeTypes.Bibtex;
 import citeTypes.RIS;
@@ -15,17 +16,18 @@ import citeTypes.RISParser;
 import formatException.WrongFormatException;
 
 /**
- * Simple absolute (evil!) layout for Ristex
+ * Simple absolute (evil!) GUI for Ristex
  */
 public class MainFrame extends JFrame {
 	
-	RIS entry;
-	Bibtex bibentry;
-	JTextArea risText;
-	JTextArea bibtexText;
-	JButton risToBibtex;
-	JButton bibtexToRis;
-	JButton closer;
+	private RIS entry;
+	private Bibtex bibentry;
+	private JTextArea risText;
+	private JTextArea bibtexText;
+	private JButton risToBibtex;
+	private JButton bibtexToRis;
+	private JButton closer;
+	private static final ImageIcon error_icon = new ImageIcon(System.getProperty("user.dir") + "/src/images/picard.jpg");
 	
 	/*
 	 * Constructor, generating the main frame with all required components
@@ -47,6 +49,7 @@ public class MainFrame extends JFrame {
 			)
 		);
 		
+		risText.setText("Copy your RIS entry here.");
 		this.risText = risText;
 		this.add(risText);
 		
@@ -60,6 +63,7 @@ public class MainFrame extends JFrame {
 			)
 		);
 		
+		bibtexText.setText("Copy your bibtex entry here.");
 		this.bibtexText = bibtexText;
 		this.add(bibtexText);
 		
@@ -84,6 +88,8 @@ public class MainFrame extends JFrame {
 		bibtexToRisAction();
 		closeAction();
 		
+		// Fixed error icon
+		
 		// Show Frame
 		this.setVisible(true);
 		setLocationRelativeTo(null);
@@ -103,16 +109,16 @@ public class MainFrame extends JFrame {
 					String content = risText.getText();
 					try {
 						entry = RISParser.parseFromString(content);
+						// Translate it to bibtex and store in bibentry
+						bibentry = new Bibtex(entry);
+						
+						// Write bibentry to bibtexText
+						bibtexText.setText(bibentry.writeToString());
+						
 					} catch (WrongFormatException e) {
 						// Replace by showing an error box
-						e.printStackTrace();
+						displayError(e);
 					}
-					
-					// Translate it to bibtex and store in bibentry
-					bibentry = new Bibtex(entry);
-					
-					// Write bibentry to bibtexText
-					bibtexText.setText(bibentry.writeToString());
 				}
 			}
 		);
@@ -127,7 +133,7 @@ public class MainFrame extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					risText.setText("Bibtex to RIS not implemented yet!");
+					displayWarning("Not implemented yet.");
 				}
 			}
 		);
@@ -146,5 +152,19 @@ public class MainFrame extends JFrame {
 				}
 			}
 		);
+	}
+	
+	/*
+	 * Generate a error box for the wrong format exception
+	 */
+	private void displayError(WrongFormatException ex) {
+		JOptionPane.showMessageDialog(this, "Given entry is not in RIS format!", "Error", JOptionPane.ERROR_MESSAGE, error_icon);
+	}
+	
+	/*
+	 * Generate a warning box for "not implemented yet"
+	 */
+	private void displayWarning(String message) {
+		JOptionPane.showMessageDialog(this, message, "Warning", JOptionPane.WARNING_MESSAGE, error_icon);
 	}
 }

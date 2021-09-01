@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import formatException.WrongFormatException;
 
-/*
+/**
  * Class for parsing RIS files/Strings
  */
 public class RISParser {
@@ -177,7 +177,7 @@ public class RISParser {
 		String[] content = line.split("  - ");
 		RIS entry = null;
 		
-		if (content[0].equals("TY")) {
+		if (content[0].equals("TY") && content.length == 2) {
 			// First line starts with TY
 			switch (content[1]) {
 				case "BOOK": entry = new RIS(RISType.BOOK); break;
@@ -186,6 +186,7 @@ public class RISParser {
 				case "JOUR": entry = new RIS(RISType.JOUR); break;
 				case "RPRT": entry = new RIS(RISType.RPRT); break;
 				case "THES": entry = new RIS(RISType.THES); break;
+				default: throw new WrongFormatException("Wrong format!");
 			}
 			
 		} else {
