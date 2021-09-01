@@ -27,7 +27,7 @@ PY  - 2020//
 ER  -
 ```
 
-The problem with RIS is that it is not compatible with bibtex - one of the major tools to create bibliographies in LaTex/Tex.
+The problem with RIS is that it is not compatible with [bibtex](https://en.wikipedia.org/wiki/BibTeX) - one of the major tools to create bibliographies in LaTex/Tex.
 The latter requires citation entries to be in bibtex format (.bib files).
 For the entry shown above, this looks as follows:
 
